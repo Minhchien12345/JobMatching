@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "n5xgAQ6zUIaWw0GRiBAnxS+iKccCeaRf+F00sBYdNq4=",
-  "Source": "Backend",
-  "BasePath": "_content/Backend",
+  "Hash": "9R2Zaebhvm6pRwno8HGkhC0i72avsI4DO/1URwaOjnc=",
+  "Source": "JobMatching.API",
+  "BasePath": "_content/JobMatching.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
