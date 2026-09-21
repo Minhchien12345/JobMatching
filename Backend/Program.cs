@@ -2,6 +2,8 @@ using JobMatching.API.Data;
 using JobMatching.API.Repositories;
 using JobMatching.API.Services;
 using Microsoft.EntityFrameworkCore;
+using JobMatching.API.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Backend
 {
@@ -19,6 +21,11 @@ namespace Backend
 
             builder.Services.AddScoped<ISkillRepository, SkillRepository>();
             builder.Services.AddScoped<ISkillService, SkillService>();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+            builder.Services.AddScoped<IPasswordHasher<User>,PasswordHasher<User>>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
