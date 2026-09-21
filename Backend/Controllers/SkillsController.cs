@@ -41,9 +41,7 @@ namespace JobMatching.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Skill>> Create(
-            CreateSkillDto dto
-        )
+        public async Task<ActionResult<Skill>> Create(CreateSkillDto dto)
         {
             var createdSkill = await _skillService.CreateAsync(dto);
 
