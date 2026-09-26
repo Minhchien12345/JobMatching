@@ -83,6 +83,11 @@ namespace Backend
                 ApplicationService
             >();
 
+            builder.Services.AddScoped<
+                IMatchingService,
+                MatchingService
+            >();
+
             string jwtKey =
                 builder.Configuration["Jwt:Key"]
                 ?? throw new InvalidOperationException(
