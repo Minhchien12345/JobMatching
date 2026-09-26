@@ -63,6 +63,26 @@ namespace Backend
                 CompanyService
             >();
 
+            builder.Services.AddScoped<
+                IJobRepository,
+                JobRepository
+            >();
+
+            builder.Services.AddScoped<
+                IJobService,
+                JobService
+            >();
+
+            builder.Services.AddScoped<
+                IApplicationRepository,
+                ApplicationRepository
+            >();
+
+            builder.Services.AddScoped<
+                IApplicationService,
+                ApplicationService
+            >();
+
             string jwtKey =
                 builder.Configuration["Jwt:Key"]
                 ?? throw new InvalidOperationException(

@@ -1,5 +1,68 @@
 [
   {
+    "ContainingType": "JobMatching.API.Controllers.ApplicationsController",
+    "Method": "GetMine",
+    "RelativePath": "api/Applications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.ApplicationsController",
+    "Method": "GetById",
+    "RelativePath": "api/Applications/{applicationId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "applicationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.ApplicationsController",
+    "Method": "Withdraw",
+    "RelativePath": "api/Applications/{applicationId}/withdraw",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "applicationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.ApplicationsController",
+    "Method": "Apply",
+    "RelativePath": "api/Applications/jobs/{jobId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "JobMatching.API.DTOs.ApplyJobDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "JobMatching.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
@@ -177,6 +240,64 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "JobMatching.API.Controllers.JobsController",
+    "Method": "Search",
+    "RelativePath": "api/Jobs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "keyword",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "location",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.JobsController",
+    "Method": "GetById",
+    "RelativePath": "api/Jobs/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.RecruiterApplicationsController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/recruiter/applications/{applicationId}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "applicationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "JobMatching.API.DTOs.UpdateApplicationStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "JobMatching.API.Controllers.RecruiterCompaniesController",
     "Method": "GetMine",
     "RelativePath": "api/recruiter/company",
@@ -229,6 +350,85 @@
       {
         "Name": "dto",
         "Type": "JobMatching.API.DTOs.UpdateCompanyStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.RecruiterJobsController",
+    "Method": "GetMine",
+    "RelativePath": "api/recruiter/jobs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.RecruiterJobsController",
+    "Method": "Create",
+    "RelativePath": "api/recruiter/jobs",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "JobMatching.API.DTOs.CreateJobDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.RecruiterJobsController",
+    "Method": "Update",
+    "RelativePath": "api/recruiter/jobs/{jobId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "JobMatching.API.DTOs.UpdateJobDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.RecruiterApplicationsController",
+    "Method": "GetByJob",
+    "RelativePath": "api/recruiter/jobs/{jobId}/applications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobMatching.API.Controllers.RecruiterJobsController",
+    "Method": "Close",
+    "RelativePath": "api/recruiter/jobs/{jobId}/close",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "jobId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
