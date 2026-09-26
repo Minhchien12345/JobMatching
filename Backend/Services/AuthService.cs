@@ -10,14 +10,17 @@ namespace JobMatching.API.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IJwtTokenService _jwtTokenService;
 
         public AuthService(
             IUserRepository userRepository,
-            IPasswordHasher<User> passwordHasher
+            IPasswordHasher<User> passwordHasher,
+            IJwtTokenService jwtTokenService
         )
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _jwtTokenService = jwtTokenService;
         }
 
         public async Task<UserResponseDto?> RegisterAsync(
@@ -55,14 +58,69 @@ namespace JobMatching.API.Services
             User createdUser =
                 await _userRepository.CreateAsync(user);
 
+            return MapToUserResponse(createdUser);
+        }
+
+        public async Task<LoginResponseDto?> LoginAsync(
+            LoginDto dto
+        )
+        {
+            string normalizedEmail =
+                dto.Email.Trim().ToLowerInvariant();
+
+            User? user =
+                await _userRepository.GetByEmailAsync(
+                    normalizedEmail
+                );
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (!user.IsActive)
+            {
+                return null;
+            }
+
+            PasswordVerificationResult passwordResult =
+                _passwordHasher.VerifyHashedPassword(
+                    user,
+                    user.PasswordHash,
+                    dto.Password
+                );
+
+            if (
+                passwordResult
+                == PasswordVerificationResult.Failed
+            )
+            {
+                return null;
+            }
+
+            var tokenResult =
+                _jwtTokenService.GenerateToken(user);
+
+            return new LoginResponseDto
+            {
+                Token = tokenResult.Token,
+                ExpiresAt = tokenResult.ExpiresAt,
+                User = MapToUserResponse(user)
+            };
+        }
+
+        private static UserResponseDto MapToUserResponse(
+            User user
+        )
+        {
             return new UserResponseDto
             {
-                Id = createdUser.Id,
-                FullName = createdUser.FullName,
-                Email = createdUser.Email,
-                Role = createdUser.Role.ToString(),
-                IsActive = createdUser.IsActive,
-                CreatedAt = createdUser.CreatedAt
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                IsActive = user.IsActive,
+                CreatedAt = user.CreatedAt
             };
         }
     }

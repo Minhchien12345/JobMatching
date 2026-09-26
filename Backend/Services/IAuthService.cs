@@ -4,6 +4,12 @@ namespace JobMatching.API.Services
 {
     public interface IAuthService
     {
-        Task<UserResponseDto?> RegisterAsync(RegisterDto dto);
+        Task<UserResponseDto?> RegisterAsync(
+            RegisterDto dto
+        );
+
+        Task<LoginResponseDto?> LoginAsync(
+            LoginDto dto
+        );
     }
 }

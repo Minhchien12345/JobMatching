@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JobMatching.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5771f50394d14ac0639edcb0bbe98e5e51aa513")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff1eb9df228dd27e0788804c47b35b1fba821213")]
 [assembly: System.Reflection.AssemblyProductAttribute("JobMatching.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JobMatching.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

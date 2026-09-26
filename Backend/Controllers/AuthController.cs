@@ -1,5 +1,7 @@
-﻿using JobMatching.API.DTOs;
+﻿using System.Security.Claims;
+using JobMatching.API.DTOs;
 using JobMatching.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobMatching.API.Controllers
@@ -35,6 +37,50 @@ namespace JobMatching.API.Controllers
                 StatusCodes.Status201Created,
                 createdUser
             );
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponseDto>> Login(
+            LoginDto dto
+        )
+        {
+            LoginResponseDto? result =
+                await _authService.LoginAsync(dto);
+
+            if (result == null)
+            {
+                return Unauthorized(new
+                {
+                    message =
+                        "Email or password is incorrect."
+                });
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            return Ok(new
+            {
+                id = User.FindFirstValue(
+                    ClaimTypes.NameIdentifier
+                ),
+
+                fullName = User.FindFirstValue(
+                    ClaimTypes.Name
+                ),
+
+                email = User.FindFirstValue(
+                    ClaimTypes.Email
+                ),
+
+                role = User.FindFirstValue(
+                    ClaimTypes.Role
+                )
+            });
         }
     }
 }

@@ -4,6 +4,10 @@ using JobMatching.API.Services;
 using Microsoft.EntityFrameworkCore;
 using JobMatching.API.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Backend
 {
@@ -15,7 +19,9 @@ namespace Backend
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("DefaultConnection")
+                    builder.Configuration.GetConnectionString(
+                        "DefaultConnection"
+                    )
                 )
             );
 
@@ -24,12 +30,99 @@ namespace Backend
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-            builder.Services.AddScoped<IPasswordHasher<User>,PasswordHasher<User>>();
+            builder.Services.AddScoped<
+                IPasswordHasher<User>,
+                PasswordHasher<User>
+            >();
+
+            string jwtKey =
+                builder.Configuration["Jwt:Key"]
+                ?? throw new InvalidOperationException(
+                    "JWT key is missing."
+                );
+
+            string jwtIssuer =
+                builder.Configuration["Jwt:Issuer"]
+                ?? throw new InvalidOperationException(
+                    "JWT issuer is missing."
+                );
+
+            string jwtAudience =
+                builder.Configuration["Jwt:Audience"]
+                ?? throw new InvalidOperationException(
+                    "JWT audience is missing."
+                );
+
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme =
+                        JwtBearerDefaults.AuthenticationScheme;
+
+                    options.DefaultChallengeScheme =
+                        JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters =
+                        new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+
+                            ValidIssuer = jwtIssuer,
+                            ValidAudience = jwtAudience,
+
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(
+                                    Encoding.UTF8.GetBytes(jwtKey)
+                                ),
+
+                            ClockSkew = TimeSpan.Zero
+                        };
+                });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition(
+                    "Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        BearerFormat = "JWT",
+                        In = ParameterLocation.Header,
+                        Description = "Enter your JWT token."
+                    }
+                );
+
+                options.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement
+                    {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+                    }
+                );
+            });
 
             var app = builder.Build();
 
@@ -41,6 +134,7 @@ namespace Backend
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
