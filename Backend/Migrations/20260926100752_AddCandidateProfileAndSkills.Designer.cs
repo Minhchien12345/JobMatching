@@ -4,6 +4,7 @@ using JobMatching.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobMatching.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260926100752_AddCandidateProfileAndSkills")]
+    partial class AddCandidateProfileAndSkills
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,56 +87,6 @@ namespace JobMatching.API.Migrations
                     b.HasIndex("SkillId");
 
                     b.ToTable("CandidateSkills");
-                });
-
-            modelBuilder.Entity("JobMatching.API.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("Industry")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("RecruiterId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Website")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecruiterId")
-                        .IsUnique();
-
-                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("JobMatching.API.Models.Skill", b =>
@@ -225,17 +178,6 @@ namespace JobMatching.API.Migrations
                     b.Navigation("Skill");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("JobMatching.API.Models.Company", b =>
-                {
-                    b.HasOne("JobMatching.API.Models.User", "Recruiter")
-                        .WithOne()
-                        .HasForeignKey("JobMatching.API.Models.Company", "RecruiterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Recruiter");
                 });
 #pragma warning restore 612, 618
         }

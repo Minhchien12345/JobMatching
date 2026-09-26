@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 namespace Backend
 {
@@ -35,6 +36,31 @@ namespace Backend
             builder.Services.AddScoped<
                 IPasswordHasher<User>,
                 PasswordHasher<User>
+            >();
+
+            builder.Services.AddScoped<
+                ICandidateProfileRepository,
+                CandidateProfileRepository
+            >();
+
+            builder.Services.AddScoped<
+                ICandidateSkillRepository,
+                CandidateSkillRepository
+            >();
+
+            builder.Services.AddScoped<
+                ICandidateService,
+                CandidateService
+            >();
+
+            builder.Services.AddScoped<
+                ICompanyRepository,
+                CompanyRepository
+            >();
+
+            builder.Services.AddScoped<
+                ICompanyService,
+                CompanyService
             >();
 
             string jwtKey =
@@ -88,7 +114,8 @@ namespace Backend
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>{options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());});
+
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddSwaggerGen(options =>
