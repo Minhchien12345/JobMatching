@@ -35,5 +35,10 @@ namespace JobMatching.API.Services
             int applicationId,
             UpdateApplicationStatusDto dto
         );
+
+        Task<RecruiterApplicantDetailDto?>GetApplicantDetailAsync(
+            int recruiterId,
+            int applicationId
+        );
     }
 }

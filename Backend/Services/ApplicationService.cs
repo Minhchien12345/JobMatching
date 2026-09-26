@@ -8,18 +8,29 @@ namespace JobMatching.API.Services
     public class ApplicationService
         : IApplicationService
     {
-        private readonly IApplicationRepository
-            _applicationRepository;
+        private readonly IApplicationRepository _applicationRepository;
 
         private readonly IJobRepository _jobRepository;
 
+        private readonly ICandidateProfileRepository _candidateProfileRepository;
+
+        private readonly ICandidateSkillRepository _candidateSkillRepository;
+
+        private readonly IMatchingService _matchingService;
+
         public ApplicationService(
-            IApplicationRepository applicationRepository,
-            IJobRepository jobRepository
-        )
+        IApplicationRepository applicationRepository,
+        IJobRepository jobRepository,
+        ICandidateProfileRepository candidateProfileRepository,
+        ICandidateSkillRepository candidateSkillRepository,
+        IMatchingService matchingService
+)
         {
             _applicationRepository = applicationRepository;
             _jobRepository = jobRepository;
+            _candidateProfileRepository = candidateProfileRepository;
+            _candidateSkillRepository = candidateSkillRepository;
+            _matchingService = matchingService;
         }
 
         public async Task<ApplicationResponseDto?>
@@ -249,6 +260,84 @@ namespace JobMatching.API.Services
                 Status = application.Status,
                 AppliedAt = application.AppliedAt,
                 UpdatedAt = application.UpdatedAt
+            };
+        }
+
+        public async Task<RecruiterApplicantDetailDto?>GetApplicantDetailAsync(int recruiterId,int applicationId)
+        {
+            JobApplication? application =
+                await _applicationRepository.GetByIdAsync(
+                    applicationId
+                );
+
+            if (
+                application == null
+                || application.Job.Company.RecruiterId
+                    != recruiterId
+            )
+            {
+                return null;
+            }
+
+            CandidateProfile? profile =
+                await _candidateProfileRepository
+                    .GetByUserIdAsync(
+                        application.CandidateId
+                    );
+
+            List<CandidateSkill> candidateSkills =
+                await _candidateSkillRepository.GetAllAsync(
+                    application.CandidateId
+                );
+
+            MatchResultDto? matchResult =
+                await _matchingService.CalculateAsync(
+                    application.CandidateId,
+                    application.JobId
+                );
+
+            CandidateProfileResponseDto? profileResponse = null;
+
+            if (profile != null)
+            {
+                profileResponse =
+                    new CandidateProfileResponseDto
+                    {
+                        Id = profile.Id,
+                        UserId = profile.UserId,
+                        FullName = profile.User.FullName,
+                        Email = profile.User.Email,
+                        Headline = profile.Headline,
+                        Bio = profile.Bio,
+                        Location = profile.Location,
+                        Education = profile.Education,
+                        YearsOfExperience =
+                            profile.YearsOfExperience
+                    };
+            }
+
+            List<CandidateSkillResponseDto> skillResponses =
+                candidateSkills.Select(candidateSkill =>
+                    new CandidateSkillResponseDto
+                    {
+                        SkillId = candidateSkill.SkillId,
+                        SkillName =
+                            candidateSkill.Skill.Name,
+                        Category =
+                            candidateSkill.Skill.Category,
+                        ProficiencyLevel =
+                            candidateSkill.ProficiencyLevel,
+                        YearsOfExperience =
+                            candidateSkill.YearsOfExperience
+                    }
+                ).ToList();
+
+            return new RecruiterApplicantDetailDto
+            {
+                Application = Map(application),
+                Profile = profileResponse,
+                Skills = skillResponses,
+                MatchResult = matchResult
             };
         }
     }

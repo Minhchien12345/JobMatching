@@ -71,5 +71,27 @@ namespace JobMatching.API.Controllers
                 )!
             );
         }
+
+        [HttpGet("applications/{applicationId:int}/candidate")]
+        public async Task<IActionResult> GetApplicantDetail(int applicationId)
+        {
+            var result =
+                await _applicationService
+                    .GetApplicantDetailAsync(
+                        GetCurrentUserId(),
+                        applicationId
+                    );
+
+            if (result == null)
+            {
+                return NotFound(new
+                {
+                    message =
+                        "Application not found or access denied."
+                });
+            }
+
+            return Ok(result);
+        }
     }
 }
