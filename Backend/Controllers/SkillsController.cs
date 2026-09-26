@@ -2,6 +2,7 @@
 using JobMatching.API.Models;
 using JobMatching.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JobMatching.API.Controllers
 {
@@ -16,6 +17,7 @@ namespace JobMatching.API.Controllers
             _skillService = skillService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<Skill>>> GetAll()
         {
@@ -24,6 +26,7 @@ namespace JobMatching.API.Controllers
             return Ok(skills);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Skill>> GetById(int id)
         {
@@ -40,6 +43,7 @@ namespace JobMatching.API.Controllers
             return Ok(skill);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Skill>> Create(CreateSkillDto dto)
         {
@@ -52,6 +56,7 @@ namespace JobMatching.API.Controllers
             );
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Skill>> Update(
             int id,
@@ -72,6 +77,7 @@ namespace JobMatching.API.Controllers
             return Ok(updatedSkill);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
